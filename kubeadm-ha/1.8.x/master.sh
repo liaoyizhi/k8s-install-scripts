@@ -81,8 +81,8 @@ echo '============================================================'
 echo '====Install kubernetes-cni、kubelet、kubectl、kubeadm...===='
 echo '============================================================'
 RPMS=(socat-1.7.3.2-2.el7.x86_64
-kubernetes-cni-0.5.1-1.x86_64
 kubelet-1.8.3-0.x86_64
+kubernetes-cni-0.5.1-1.x86_64
 kubectl-1.8.3-0.x86_64
 kubeadm-1.8.3-0.x86_64)
 # 下载rpm包
