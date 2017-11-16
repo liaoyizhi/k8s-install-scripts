@@ -81,22 +81,25 @@ echo '============================================================'
 echo '====Install kubernetes-cni、kubelet、kubectl、kubeadm...===='
 echo '============================================================'
 RPMS=(socat-1.7.3.2-2.el7.x86_64
-kubelet-1.8.3-0.x86_64
 kubernetes-cni-0.5.1-1.x86_64
+kubelet-1.8.3-0.x86_64
 kubectl-1.8.3-0.x86_64
 kubeadm-1.8.3-0.x86_64)
 # 下载rpm包
+mkdir -p /tmp/k8s
 for rpmName in ${RPMS[@]} ; do
-  curl -o /tmp/$rpmName.rpm $RPM_URL_PREFIX$rpmName.rpm
+  curl -o /tmp/k8s/$rpmName.rpm $RPM_URL_PREFIX$rpmName.rpm
 done
 # rpm安装（顺序不能错）
-for rpmName in ${RPMS[@]} ; do
-  rpm -ivh /tmp/$rpmName.rpm
-done
+# for rpmName in ${RPMS[@]} ; do
+#   rpm -ivh /tmp/k8s/$rpmName.rpm
+# done
+rpm -ivh /tmp/k8s/*.rpm
 # 删除rpm包
-for rpmName in ${RPMS[@]} ; do
-  rm -f /tmp/$rpmName.rpm
-done
+# for rpmName in ${RPMS[@]} ; do
+#   rm -rf /tmp/k8s
+# done
+rm -rf /tmp/k8s
 
 echo "Install success!"
 
