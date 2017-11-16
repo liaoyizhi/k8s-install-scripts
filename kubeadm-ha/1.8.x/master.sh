@@ -90,15 +90,9 @@ mkdir -p /tmp/k8s
 for rpmName in ${RPMS[@]} ; do
   curl -o /tmp/k8s/$rpmName.rpm $RPM_URL_PREFIX$rpmName.rpm
 done
-# rpm安装（顺序不能错）
-# for rpmName in ${RPMS[@]} ; do
-#   rpm -ivh /tmp/k8s/$rpmName.rpm
-# done
+# rpm安装
 rpm -ivh /tmp/k8s/*.rpm
 # 删除rpm包
-# for rpmName in ${RPMS[@]} ; do
-#   rm -rf /tmp/k8s
-# done
 rm -rf /tmp/k8s
 
 echo "Install success!"
