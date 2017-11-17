@@ -191,7 +191,7 @@ install_etct_to_other_server () {
 }
 
 kubeadm_init () {
-  export KUBE_REPO_PREFIX="${DOCKER_IMAGE_PREFIX}"
+  #export KUBE_REPO_PREFIX="${DOCKER_IMAGE_PREFIX}"
 
   API_SERVER_CERT_SANS=""
   ETCD_ENDPOINTS=""
@@ -208,6 +208,7 @@ kubeadm_init () {
 apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 kubernetesVersion: v${KUBE_VERSION}
+imageRepository: ${DOCKER_IMAGE_PREFIX}
 networking:
   podSubnet: 10.244.0.0/16
 apiServerCertSANs:
@@ -224,7 +225,7 @@ EOF
   echo "You can use this order to query the token: kubeadm token list"
 
   #v1.7.x使用了NodeRestriction等安全检查控制，务必设置成v1.6.x推荐的admission-control配置
-  sed -i 's/- --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota/- --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds/g' /etc/kubernetes/manifests/kube-apiserver.yaml
+  #sed -i 's/- --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota/- --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds/g' /etc/kubernetes/manifests/kube-apiserver.yaml
   
   #config admin...
   mkdir -p $HOME/.kube
