@@ -62,7 +62,7 @@ echo '============================================================'
 #yum list docker-ce.x86_64  --showduplicates |sort -r
 #安装docker
 # Kubernetes 1.8已经针对Docker的1.11.2, 1.12.6, 1.13.1和17.03.2等版本做了验证。 这里在各节点安装docker的17.03.2版本。
-yum install -y docker-ce --setopt=obsoletes=0 docker-ce-17.03.2.ce-1.el7.centos docker-ce-selinux-17.03.2.ce-1.el7.centos
+yum install -y --setopt=obsoletes=0 docker-ce-17.03.2.ce-1.el7.centos docker-ce-selinux-17.03.2.ce-1.el7.centos
 
 echo "Install docker success!"
 
