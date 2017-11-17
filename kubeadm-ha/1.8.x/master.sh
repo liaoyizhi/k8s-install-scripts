@@ -28,9 +28,9 @@ CURRENT_DIR="$(pwd)"
 echo '============================================================'
 echo '====================Disable selinux and firewalld...========'
 echo '============================================================'
-if [ $(getenforce) = "Enabled" ]; then
+#if [ $(getenforce) = "Enabled" ]; then
 setenforce 0
-fi
+#fi
 systemctl disable firewalld
 systemctl stop firewalld
 
@@ -59,10 +59,10 @@ echo '============================================================'
 echo '====================Install docker...======================='
 echo '============================================================'
 #查看docker版本
-#yum list docker-engine showduplicates
+#yum list docker-ce.x86_64  --showduplicates |sort -r
 #安装docker
-# yum install -y docker-engine-1.12.6-1.el7.centos.x86_64
-yum -y install docker-ce
+# Kubernetes 1.8已经针对Docker的1.11.2, 1.12.6, 1.13.1和17.03.2等版本做了验证。 这里在各节点安装docker的17.03.2版本。
+yum install -y docker-ce --setopt=obsoletes=0 docker-ce-17.03.2.ce-1.el7.centos docker-ce-selinux-17.03.2.ce-1.el7.centos
 
 echo "Install docker success!"
 
@@ -72,9 +72,14 @@ echo '============================================================'
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
-  "registry-mirrors": ["${DOCKER_MIRRORS}"]
+  "registry-mirrors": ["${DOCKER_MIRRORS}"],
+  "exec-opts": ["native.cgroupdriver=systemd"]
 }
 EOF
+# Docker从1.13版本开始调整了默认的防火墙规则，禁用了iptables filter表中FOWARD链，这样会引起Kubernetes集群中跨Node的Pod无法通信，在各个Docker节点执行下面的命令：
+iptables -P FORWARD ACCEPT
+# 并在docker的systemd unit文件中以ExecStartPost加入上面的命令
+sed -i '/^\ExecStart=/i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
 echo "Config docker success!"
 
 echo '============================================================'
@@ -100,7 +105,10 @@ echo "Install success!"
 echo '============================================================'
 echo '===================Config kubelet...========================'
 echo '============================================================'
-sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+#sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+# Kubernetes 1.8开始要求关闭系统的Swap，如果不关闭，默认配置下kubelet将无法启动。可以通过kubelet的启动参数--fail-swap-on=false更改这个限制。这里修改启动参数
+sed -i '/^\[Service\]/a\Environment="KUBELET_SWAP_ARGS=--fail-swap-on=false"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sed -i 's/ExecStart=[^\n].*$/& $KUBELET_SWAP_ARGS/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 echo "config --pod-infra-container-image=${DOCKER_IMAGE_PREFIX}/pause-amd64:${KUBE_PAUSE_VERSION}"
 cat > /etc/systemd/system/kubelet.service.d/20-pod-infra-image.conf <<EOF
