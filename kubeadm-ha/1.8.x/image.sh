@@ -12,7 +12,7 @@ set -o pipefail
 KUBE_VERSION=v1.8.3
 KUBE_PAUSE_VERSION=3.0
 ETCD_VERSION=3.0.17
-DNS_VERSION=1.14.4
+DNS_VERSION=1.14.5
 
 GCR_URL=gcr.io/google_containers
 ALIYUN_URL=registry.cn-shenzhen.aliyuncs.com/bixin_k8s
