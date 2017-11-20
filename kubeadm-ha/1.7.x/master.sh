@@ -265,12 +265,12 @@ create_flannel_service () {
 
 install_heapster () {
   kubectl taint nodes --all node-role.kubernetes.io/master-
-  kubectl create -f ../yaml/cluster-monitoring
+  kubectl create -f ../../yaml/cluster-monitoring
   echo "Heapster is installed! Please wait a few minutes to check."
 }
 
 install_dashboard () {
-  kubectl create -f ../yaml/dashboard/1.6.3/kubernetes-dashboard.yaml
+  kubectl create -f ../../yaml/dashboard/1.6.3/kubernetes-dashboard.yaml
   echo "Dashboard is installed! Default port is: 30000."
 }
 
