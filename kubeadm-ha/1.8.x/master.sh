@@ -224,8 +224,8 @@ EOF
   #查看token的命令
   echo "You can use this order to query the token: kubeadm token list"
 
-  #v1.7.x使用了NodeRestriction等安全检查控制，务必设置成v1.6.x推荐的admission-control配置
-  #sed -i 's/- --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota/- --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds/g' /etc/kubernetes/manifests/kube-apiserver.yaml
+  #由于v1.7.x以后使用了NodeRestriction等安全检查控制，务必设置成v1.6.x推荐的admission-control配置
+  sed -i 's/- --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota/- --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds/g' /etc/kubernetes/manifests/kube-apiserver.yaml
   
   #config admin...
   mkdir -p $HOME/.kube
