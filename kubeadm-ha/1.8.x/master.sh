@@ -274,7 +274,8 @@ install_heapster () {
 }
 
 install_dashboard () {
-  kubectl create -f ../yaml/dashboard/kubernetes-dashboard.yaml
+  kubectl create -f ../yaml/dashboard/1.7.1/kubernetes-dashboard.yaml
+  kubectl create -f ../yaml/dashboard/1.7.1/kubernetes-dashboard-admin.rbac.yaml
   echo "Dashboard is installed! Default port is: 30000."
 }
 
